@@ -63,4 +63,7 @@ async fn main() {
     println!("Logs: {:?}", logs);
     let data_commitment_stored = DataCommitmentStored::from_log(&log);
     println!("Data commitment stored: {:?}", data_commitment_stored);
+
+    // TODO: 
+    // Get the inclusion proof with these docs https://docs.celestia.org/how-to-guides/blobstream-proof-queries
 }
