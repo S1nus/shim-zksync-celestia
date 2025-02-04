@@ -6,6 +6,8 @@ use zksync_basic_types::ethabi::decode;
 use zksync_basic_types::{U256, H256};
 use std::fs::File;
 
+mod tm_rpc_utils;
+
 #[derive(Debug)]
 pub struct DataCommitmentStored {
     pub proof_nonce: U256,
@@ -66,4 +68,7 @@ async fn main() {
 
     // TODO: 
     // Get the inclusion proof with these docs https://docs.celestia.org/how-to-guides/blobstream-proof-queries
+    let tm_rpc_client = tm_rpc_utils::TendermintRPCClient::new("http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string());
+    let proof = tm_rpc_client.get_data_root_inclusion_proof(data_commitment_stored.start_block.as_u64()+(data_commitment_stored.end_block.as_u64() - data_commitment_stored.start_block.as_u64())/2, data_commitment_stored.start_block.as_u64(), data_commitment_stored.end_block.as_u64() ).await.unwrap();
+    println!("Proof: {:?}", proof);
 }

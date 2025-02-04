@@ -3182,6 +3182,7 @@ dependencies = [
 name = "shim-integration"
 version = "0.1.0"
 dependencies = [
+ "reqwest 0.11.27",
  "tokio",
  "zksync_basic_types",
  "zksync_eth_client",
