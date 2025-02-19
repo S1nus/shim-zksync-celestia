@@ -1,6 +1,6 @@
 use zksync_web3_decl::client::{Client, L1};
 use zksync_eth_client::EthInterface;
-use zksync_basic_types::web3::{Log, Filter, BlockNumber, FilterBuilder};
+use zksync_basic_types::web3::{Log, Filter, BlockNumber, FilterBuilder, CallRequest, BlockId};
 use zksync_basic_types::ethabi::{Contract, Event, ParamType, RawTopicFilter};
 use zksync_basic_types::ethabi::decode;
 use zksync_basic_types::{U256, H256};
@@ -47,7 +47,18 @@ async fn main() {
         .expect("Could not get block number");
     println!("Block number: {}", block_num);
 
+    let request = CallRequest {
+        to: Some("0xF0c6429ebAB2e7DC6e05DaFB61128bE21f13cb1e".parse().unwrap()),
+        data: Some(contract.function("latestBlock").unwrap().encode_input(&[]).unwrap().into()),
+        ..Default::default()
+    };
+    let result = client.call_contract_function(request, Some(BlockId::Number(block_num.into()))).await.unwrap().0;
+    let latest_block = decode(&[ParamType::Uint(256)], &result).unwrap()[0].clone().into_uint().unwrap();
+    println!("Latest blobstream block: {}", latest_block);
+    return;
+
     println!("Event signature: {:?}", blobstream_update_event.signature());
+
     
     let filter = FilterBuilder::default()
         .from_block(BlockNumber::Number(block_num-500))
