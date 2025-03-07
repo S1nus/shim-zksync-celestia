@@ -1,3 +1,3 @@
 # Shim Integration
 
-This is some code demonstrating how to integrate with Blobstream using ZKSync's types.
+On the `main` branch, we import the ZKStack Celestia integration and run it as a standalone, to test and shake out bugs.

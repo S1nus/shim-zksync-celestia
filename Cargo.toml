@@ -5,4 +5,10 @@ edition = "2024"
 
 [dependencies]
 zksync_da_clients = { path = "../zksync-era/core/node/da_clients" }
+zksync_da_client = { path = "../zksync-era/core/lib/da_client"}
 zksync_config = { path = "../zksync-era/core/lib/config" }
+zksync_web3_decl = { path = "../zksync-era/core/lib/web3_decl" }
+zksync_eth_client = { path = "../zksync-era/core/lib/eth_client" }
+zksync_basic_types = { path = "../zksync-era/core/lib/basic_types" }
+tokio = { version = "1", features = ["full"] }
+rand = "0.8"
