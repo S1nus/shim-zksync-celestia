@@ -78,37 +78,32 @@ async fn main() {
         .collect();
 
     for blob_id in blob_ids {
-        let mut random_data = vec![0u8; blob_size];
-        rand::thread_rng().fill_bytes(&mut random_data);
-
-        println!("Dispatching blob");
-        let blob = match da_client.dispatch_blob(1, random_data).await {
-            Ok(blob) => blob,
-            Err(e) => {
-                writeln!(error_log, "Failed to dispatch blob: {}", e)
-                    .expect("Failed to write to error log");
-                continue;
-            }
-        };
-        println!("Blob dispatched: {:?}", blob.blob_id);
 
         println!("Getting inclusion data");
         let inclusion_data = loop {
-            let data = match da_client.get_inclusion_data(&blob.blob_id).await {
+            println!("blob_id: {}", blob_id);
+            let data = match da_client.get_inclusion_data(&format!("{}", blob_id)).await {
                 Ok(data) => data,
                 Err(e) => {
                     writeln!(error_log, "Failed to get inclusion data: {}", e)
                         .expect("Failed to write to error log");
-                    continue;
+                    break Err(e);
                 }
             };
             if let Some(data) = data {
-                break data;
+                break Ok(data);
             }
             println!("Inclusion data not ready yet, retrying...");
             tokio::time::sleep(std::time::Duration::from_millis(1000)).await;
         };
 
-        println!("Inclusion data: {:?}", inclusion_data.data);
+        match inclusion_data {
+            Ok(data) => {
+                println!("Inclusion data: {:?}", data.data);
+            }
+            Err(e) => {
+                println!("Error: {:?}", e);
+            }
+        }
     }
 }
