@@ -13,6 +13,7 @@ zksync_basic_types = { path = "../zksync-era/core/lib/basic_types" }
 tokio = { version = "1", features = ["full"] }
 rand = "0.8"
 tracing-subscriber = "*"
-# comment these out, going with a different approach
-# eq-sdk = { path = "../eq-service/sdk"}
-# celestia-types = "*"
+eq-sdk = { path = "../eq-service/sdk"}
+celestia-types = "*"
+hex = "0.4.3"
+base64 = "0.22.1"

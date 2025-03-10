@@ -7309,6 +7309,10 @@ dependencies = [
 name = "shim-integration"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
+ "celestia-types",
+ "eq-sdk",
+ "hex",
  "rand",
  "tokio",
  "tracing-subscriber",

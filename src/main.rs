@@ -11,9 +11,9 @@ use std::env;
 use rand::RngCore;
 use tracing_subscriber::{EnvFilter};
 use std::io::Write;
-//use eq_sdk::BlobId;
-//use celestia_types::{blob::Co}
-//use celestia_types::{blob::Commitment, block::Height as BlockHeight, nmt::Namespace};
+use eq_sdk::BlobId;
+use celestia_types::{blob::Commitment, block::Height as BlockHeight, nmt::Namespace, Height};
+use base64::prelude::*;
 
 #[tokio::main]
 async fn main() {
@@ -55,9 +55,29 @@ async fn main() {
     let mut error_log = std::fs::File::create("error_log.txt")
         .expect("Failed to create error log file");
 
-    let mut count = 0;
-    loop {
-        println!("Run number: {}", count);
+    let test_cases: Vec<(u32, &str, &str)> = vec![
+        (5097912, "a00fc36d20187faa8a2e", "+3Pc84EgFrdj13uaW9nXV1xTe38Z2cAOYFBnlG6T4p0="),
+        (5098217, "ca1de12ab8035a60aeec", "M+JtgYQzRMrZUyj8rW0nnkX29RSStdbeQfwXErw5V1Y="),
+        (5098230, "ca1de12a1f4dbe943b6b", "lqdz37LujKKjMwpAfh/V17ZzgnIGwlhlmKtR+eIxpQ0="),
+        (5098230, "ca1de12a86e37a25406c", "lEQTP9g4QhWCYgdccjxwXEjdcQNmxatt8z9Zo2KPp4o="),
+        (5098230, "ca1de12a842f52467e34", "eOx6FZaVXF20fMGsOy1f8PJ4DODkxMa+GQBtfZg7l3s="),
+        (5098245, "ca1de12ac5a629c3c42f", "nu0EzuaM890rW01z2oHW5zypsyuxdpmctII2q89AMdw="),
+        (5098340, "af6bf5a05e042eb5ab2e", "UDkfGNpLwBlRkjdtfCQg8yNabaWgZCdI869s6p2Syxk="),
+        (5098347, "ca1de12a03a72910791f", "37bAr4gxWS/C/Tr2LeeCwEX/9I/TfvaEYGbqVYxg8b8="),
+    ];
+
+    let blob_ids: Vec<BlobId> = test_cases
+        .into_iter()
+        .map(|(height, namespace, commitment)| {
+            BlobId::new(
+                Height::from(height),
+                Namespace::const_v0(hex::decode(namespace).unwrap().try_into().unwrap()),
+                Commitment::new(BASE64_STANDARD.decode(commitment).unwrap().try_into().unwrap())
+            )
+        })
+        .collect();
+
+    for blob_id in blob_ids {
         let mut random_data = vec![0u8; blob_size];
         rand::thread_rng().fill_bytes(&mut random_data);
 
@@ -86,10 +106,9 @@ async fn main() {
                 break data;
             }
             println!("Inclusion data not ready yet, retrying...");
-            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+            tokio::time::sleep(std::time::Duration::from_millis(1000)).await;
         };
 
         println!("Inclusion data: {:?}", inclusion_data.data);
-        count += 1;
     }
 }
