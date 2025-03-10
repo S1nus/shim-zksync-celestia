@@ -12,3 +12,7 @@ zksync_eth_client = { path = "../zksync-era/core/lib/eth_client" }
 zksync_basic_types = { path = "../zksync-era/core/lib/basic_types" }
 tokio = { version = "1", features = ["full"] }
 rand = "0.8"
+tracing-subscriber = "*"
+# comment these out, going with a different approach
+# eq-sdk = { path = "../eq-service/sdk"}
+# celestia-types = "*"
