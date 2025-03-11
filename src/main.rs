@@ -54,9 +54,12 @@ async fn main() {
     
     let mut error_log = std::fs::File::create("error_log.txt")
         .expect("Failed to create error log file");
+    let mut inclusion_data_log = std::fs::File::create("inclusion_data_log.txt")
+        .expect("Failed to create inclusion data log file");
 
     let mut count = 0;
     loop {
+        count += 1;
         println!("Run number: {}", count);
         let mut random_data = vec![0u8; blob_size];
         rand::thread_rng().fill_bytes(&mut random_data);
@@ -65,7 +68,7 @@ async fn main() {
         let blob = match da_client.dispatch_blob(1, random_data).await {
             Ok(blob) => blob,
             Err(e) => {
-                writeln!(error_log, "Failed to dispatch blob: {}", e)
+                writeln!(error_log, "Failed to dispatch blob number: {} error: {}", count, e)
                     .expect("Failed to write to error log");
                 continue;
             }
@@ -77,7 +80,7 @@ async fn main() {
             let data = match da_client.get_inclusion_data(&blob.blob_id).await {
                 Ok(data) => data,
                 Err(e) => {
-                    writeln!(error_log, "Failed to get inclusion data: {}", e)
+                    writeln!(error_log, "Failed to get inclusion data blob_id: {} error: {}", blob.blob_id, e)
                         .expect("Failed to write to error log");
                     continue;
                 }
@@ -90,6 +93,7 @@ async fn main() {
         };
 
         println!("Inclusion data: {:?}", inclusion_data.data);
-        count += 1;
+        writeln!(inclusion_data_log, "Inclusion data: {:?} for blob_id: {}", inclusion_data.data, blob.blob_id)
+            .expect("Failed to write to inclusion data log");
     }
 }
