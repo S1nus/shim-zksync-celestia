@@ -25,19 +25,21 @@ async fn main() {
     let config = CelestiaConfig {
         api_node_url: "https://grpc.archive.mocha.cumulo.com.es:443".to_string(),
         //eq_service_url: "https://eq-service-dev.eu-north-2.gateway.fm".to_string(),
-        eq_service_url: "http://eqs.cnode.phd:50051".to_string(),
+        eq_service_grpc_url: "http://eqs.cnode.phd:50051".to_string(),
         namespace: "00000000000000000000000000000000000000000413528b469e1926".to_string(),
         //ychain_id: "2222-2".to_string(),
         chain_id: "mocha-4".to_string(),
         timeout_ms: 10000,
-        tm_rpc_url: "http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string(),
+        celestia_core_tendermint_rpc_url: "http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string(),
+        blobstream_contract_address: "0xf0c6429ebab2e7dc6e05dafb61128be21f13cb1e".to_string(),
+        num_pages: 500,
+        page_size: 1000,
     };
 
     let secrets = CelestiaSecrets {
         private_key: env::var("PRIVATE_KEY")
             .expect("PRIVATE_KEY environment variable not set")
-            .parse()
-            .expect("Failed to parse PRIVATE_KEY"),
+            .into()
     }; 
 
     let eth_client: Client<L1> = Client::http("https://eth-sepolia.g.alchemy.com/v2/nCakZRn9VQg2I-CWYm6hVKpM4pvBYLWg".parse().unwrap())
@@ -77,6 +79,8 @@ async fn main() {
         })
         .collect();
 
+    let mut test_cases: Vec<String> = vec![];
+
     for blob_id in blob_ids {
 
         println!("Getting inclusion data");
@@ -99,11 +103,17 @@ async fn main() {
 
         match inclusion_data {
             Ok(data) => {
-                println!("Inclusion data: {:?}", data.data);
+                println!("Inclusion data for blob_id {}: {}", blob_id,hex::encode(data.data.clone()));
+                test_cases.push(hex::encode(data.data.clone()));
             }
             Err(e) => {
                 println!("Error: {:?}", e);
             }
         }
     }
+
+    let json = serde_json::to_string_pretty(&test_cases).expect("Failed to serialize test cases");
+    std::fs::write("test_cases.json", json).expect("Failed to write test cases to file");
+    println!("Wrote test cases to test_cases.json");
+
 }
