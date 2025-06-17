@@ -1356,37 +1356,6 @@ dependencies = [
 
 [[package]]
 name = "celestia-types"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18e0fa0f7432d59891db755b883f4a70d5f0fa42b63a6b9c0a440563d59dfa39"
-dependencies = [
- "base64 0.22.1",
- "bech32",
- "bitvec",
- "blockstore",
- "bytes",
- "celestia-proto",
- "cid",
- "const_format",
- "enum_dispatch",
- "leopard-codec",
- "libp2p-identity",
- "multiaddr",
- "multihash",
- "nmt-rs",
- "prost 0.13.5",
- "ruint",
- "serde",
- "serde_repr",
- "sha2 0.10.8",
- "tendermint",
- "tendermint-proto",
- "thiserror 1.0.69",
- "time",
-]
-
-[[package]]
-name = "celestia-types"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f06856e4cbee22b12ca4098196c930660b528921fb819158fe6837974afd8478"
@@ -2327,14 +2296,11 @@ dependencies = [
 
 [[package]]
 name = "eq-common"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
- "bincode",
- "celestia-types 0.10.1",
- "nmt-rs",
+ "celestia-types",
  "prost 0.12.6",
  "serde",
- "sha3 0.10.8",
  "thiserror 2.0.12",
  "tonic",
  "tonic-build",
@@ -2346,7 +2312,7 @@ version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7079165dc44ef550a98d34df009eac50d02b16b6b69b5032df8ff65a662c1467"
 dependencies = [
- "celestia-types 0.11.2",
+ "celestia-types",
  "prost 0.12.6",
  "serde",
  "thiserror 2.0.12",
@@ -2356,12 +2322,11 @@ dependencies = [
 
 [[package]]
 name = "eq-sdk"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "base64 0.22.1",
- "celestia-types 0.10.1",
- "eq-common 0.1.6",
- "log",
+ "celestia-types",
+ "eq-common 0.1.7",
  "serde",
  "tokio",
  "tonic",
@@ -2374,8 +2339,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aa109512921a257a40f7f7227bc0848f86e74d4e407541ec2ac7e71c69ef3b5e"
 dependencies = [
  "base64 0.22.1",
- "celestia-types 0.11.2",
- "eq-common 0.1.7",
+ "celestia-types",
+ "eq-common 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "tokio",
  "tonic",
@@ -6544,10 +6509,11 @@ name = "shim-integration"
 version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
- "celestia-types 0.10.1",
- "eq-sdk 0.1.6",
+ "celestia-types",
+ "eq-sdk 0.1.7",
  "hex",
  "rand 0.8.5",
+ "secrecy 0.10.3",
  "serde_json",
  "tokio",
  "tracing-subscriber",
@@ -8903,9 +8869,9 @@ dependencies = [
  "blake2 0.10.6",
  "blake2b_simd",
  "bytes",
- "celestia-types 0.10.1",
+ "celestia-types",
  "chrono",
- "eq-sdk 0.1.7",
+ "eq-sdk 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2",
  "futures",
  "hex",

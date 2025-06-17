@@ -11,9 +11,11 @@ use std::env;
 use rand::RngCore;
 use tracing_subscriber::{EnvFilter};
 use std::io::Write;
+use std::time::Duration;
 use eq_sdk::BlobId;
 use celestia_types::{blob::Commitment, block::Height as BlockHeight, nmt::Namespace, Height};
 use base64::prelude::*;
+use secrecy::SecretString;
 
 #[tokio::main]
 async fn main() {
@@ -32,16 +34,16 @@ async fn main() {
         chain_id: "mocha-4".to_string(),
         timeout: Duration::from_millis(10000),
         //celestia_core_tendermint_rpc_url: "http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string(),
-        celestia_core_tendermint_rpc_url: "https://thrilling-proud-tab.celestia-mocha.quiknode.pro/04b606059a40c8045e102afc9d5c494107cb9fc5/".to_string(),
+        celestia_core_tendermint_rpc_url: "https://thrilling-proud-tab.celestia-mocha.quiknode.pro/04b606059a40c8045e102afc9d5c494107cb9fc5".to_string(),
         blobstream_contract_address: "0xf0c6429ebab2e7dc6e05dafb61128be21f13cb1e".to_string(),
         blobstream_events_num_pages: 500,
         blobstream_events_page_size: 1000,
     };
 
     let secrets = CelestiaSecrets {
-        private_key: env::var("PRIVATE_KEY")
-            .expect("PRIVATE_KEY environment variable not set")
-            .into()
+        private_key: SecretString::new(
+            env::var("PRIVATE_KEY").expect("PRIVATE_KEY environment variable not set").into_boxed_str()
+        ).into()
     }; 
 
     let eth_client: Client<L1> = Client::http("https://eth-sepolia.g.alchemy.com/v2/nCakZRn9VQg2I-CWYm6hVKpM4pvBYLWg".parse().unwrap())
@@ -59,7 +61,7 @@ async fn main() {
     let mut error_log = std::fs::File::create("error_log.txt")
         .expect("Failed to create error log file");
 
-    let test_cases: Vec<(u32, &str, &str)> = vec![
+    /*let test_cases: Vec<(u32, &str, &str)> = vec![
         (5097912, "a00fc36d20187faa8a2e", "+3Pc84EgFrdj13uaW9nXV1xTe38Z2cAOYFBnlG6T4p0="),
         (5098217, "ca1de12ab8035a60aeec", "M+JtgYQzRMrZUyj8rW0nnkX29RSStdbeQfwXErw5V1Y="),
         (5098230, "ca1de12a1f4dbe943b6b", "lqdz37LujKKjMwpAfh/V17ZzgnIGwlhlmKtR+eIxpQ0="),
@@ -68,6 +70,10 @@ async fn main() {
         (5098245, "ca1de12ac5a629c3c42f", "nu0EzuaM890rW01z2oHW5zypsyuxdpmctII2q89AMdw="),
         (5098340, "af6bf5a05e042eb5ab2e", "UDkfGNpLwBlRkjdtfCQg8yNabaWgZCdI869s6p2Syxk="),
         (5098347, "ca1de12a03a72910791f", "37bAr4gxWS/C/Tr2LeeCwEX/9I/TfvaEYGbqVYxg8b8="),
+    ];*/
+
+    let test_cases: Vec<(u32, &str, &str)> = vec![
+        (6692080, "5d251311f25b13a549e0", "iu5d9b+rtl5B/j2ju3hUqbJT0y/kcUV4gHUdCvU2Jn4="),
     ];
 
     let blob_ids: Vec<BlobId> = test_cases
