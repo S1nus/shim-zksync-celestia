@@ -26,14 +26,16 @@ async fn main() {
         api_node_url: "https://grpc.archive.mocha.cumulo.com.es:443".to_string(),
         //eq_service_url: "https://eq-service-dev.eu-north-2.gateway.fm".to_string(),
         eq_service_grpc_url: "http://eqs.cnode.phd:50051".to_string(),
+        //eq_service_grpc_url: "https://eq-service-dev.eu-north-2.gateway.fm:443".to_string(),
         namespace: "00000000000000000000000000000000000000000413528b469e1926".to_string(),
         //ychain_id: "2222-2".to_string(),
         chain_id: "mocha-4".to_string(),
-        timeout_ms: 10000,
-        celestia_core_tendermint_rpc_url: "http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string(),
+        timeout: Duration::from_millis(10000),
+        //celestia_core_tendermint_rpc_url: "http://public-celestia-mocha4-consensus.numia.xyz:26657".to_string(),
+        celestia_core_tendermint_rpc_url: "https://thrilling-proud-tab.celestia-mocha.quiknode.pro/04b606059a40c8045e102afc9d5c494107cb9fc5/".to_string(),
         blobstream_contract_address: "0xf0c6429ebab2e7dc6e05dafb61128be21f13cb1e".to_string(),
-        num_pages: 500,
-        page_size: 1000,
+        blobstream_events_num_pages: 500,
+        blobstream_events_page_size: 1000,
     };
 
     let secrets = CelestiaSecrets {
