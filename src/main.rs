@@ -23,7 +23,7 @@ async fn main() {
         .init();
 
     let config = CelestiaConfig {
-        api_node_url: "https://grpc.archive.mocha.cumulo.com.es:443".to_string(),
+        api_node_url: "https://thrilling-proud-tab.celestia-mocha.quiknode.pro/04b606059a40c8045e102afc9d5c494107cb9fc5/".to_string(),
         //eq_service_url: "https://eq-service-dev.eu-north-2.gateway.fm".to_string(),
         eq_service_grpc_url: "http://eqs.cnode.phd:50051".to_string(),
         //eq_service_grpc_url: "https://eq-service-dev.eu-north-2.gateway.fm:443".to_string(),
