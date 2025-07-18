@@ -26,9 +26,10 @@ async fn main() {
 
     let config = CelestiaConfig {
         api_node_url: "https://thrilling-proud-tab.celestia-mocha.quiknode.pro/04b606059a40c8045e102afc9d5c494107cb9fc5/".to_string(),
-        //eq_service_url: "https://eq-service-dev.eu-north-2.gateway.fm".to_string(),
-        eq_service_grpc_url: "http://eqs.cnode.phd:50051".to_string(),
-        //eq_service_grpc_url: "https://eq-service-dev.eu-north-2.gateway.fm:443".to_string(),
+        //eq_service_grpc_url: "https://eq-service-dev.gateway.fm".to_string(),
+        //eq_service_grpc_url: "tcp://127.0.0.1:50051".to_string(),
+        //eq_service_grpc_url: "http://eqs.cnode.phd:50051".to_string(),
+        eq_service_grpc_url: "http://51.15.252.63:50051".to_string(),
         namespace: "00000000000000000000000000000000000000000413528b469e1926".to_string(),
         //ychain_id: "2222-2".to_string(),
         chain_id: "mocha-4".to_string(),
@@ -50,7 +51,7 @@ async fn main() {
         .expect("Could not create client")
         .build();
 
-    let da_client = CelestiaClient::new(config, secrets, Box::new(eth_client))
+    let da_client = CelestiaClient::new(config, secrets, Box::new(eth_client), 0.into())
         .await
         .expect("Could not create DA client");
     
@@ -73,7 +74,7 @@ async fn main() {
     ];*/
 
     let test_cases: Vec<(u32, &str, &str)> = vec![
-        (6692080, "5d251311f25b13a549e0", "iu5d9b+rtl5B/j2ju3hUqbJT0y/kcUV4gHUdCvU2Jn4="),
+        (7086714, "03f3f679bf7304cb", "xX/K39Dz+VK+PQgbtDALVeB81wvkZTVnHEc0DhxODs8="),
     ];
 
     let blob_ids: Vec<BlobId> = test_cases
@@ -81,11 +82,16 @@ async fn main() {
         .map(|(height, namespace, commitment)| {
             BlobId::new(
                 Height::from(height),
-                Namespace::const_v0(hex::decode(namespace).unwrap().try_into().unwrap()),
-                Commitment::new(BASE64_STANDARD.decode(commitment).unwrap().try_into().unwrap())
+                Namespace::new_v0(&hex::decode(namespace).unwrap()).expect("Failed to create namespace"),
+                Commitment::new(BASE64_STANDARD.decode(commitment).unwrap().try_into().unwrap()),
+                0,
+                0
             )
         })
         .collect();
+
+
+    println!("getting inclusion data");
 
     let mut test_cases: Vec<String> = vec![];
 
